@@ -1,126 +1,169 @@
 <h1 align="center">Hi 👋, I'm Phúc</h1>
-<h3 align="center">Backend Engineer | ASP.NET Core | Real-time Systems | Distributed Systems</h3>
+
+<p align="center">
+  <b>Backend Engineer</b> · .NET · Distributed Systems · AI Infrastructure
+</p>
+
+<p align="center">
+  Building backend systems around distributed communication, real-time processing, concurrency, and LLM infrastructure.
+</p>
 
 ---
 
-## 🧠 About Me
+## About Me
 
-Backend engineer with hands-on experience in building **real-time and scalable systems** using ASP.NET Core.
+I'm a Backend Engineer primarily working with **C# and .NET**.
 
-Strong focus on:
+I'm interested in:
 
-* System design & backend architecture
-* Event-driven systems (Kafka, Redis)
-* Real-time communication (SignalR, WebSocket)
+- Distributed systems & microservices
+- Event-driven architecture
+- Kafka & RabbitMQ
+- Real-time systems
+- Concurrency & rate limiting
+- Caching & distributed state
+- AI / LLM infrastructure
+- Reliability & resilience
 
-I build systems that prioritize **performance, consistency, and scalability**, not just functionality.
+I prefer building things from real problems and understanding how systems behave under **load, concurrency, failure, and distributed communication**.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Backend
 
-![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge\&logo=c-sharp)
-![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge\&logo=dotnet)
-![ASP.NET](https://img.shields.io/badge/ASP.NET_Core-5C2D91?style=for-the-badge\&logo=dotnet)
+`C#` `ASP.NET Core` `.NET` `Entity Framework Core`
 
-### Database
+### Distributed Systems
 
-![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge\&logo=microsoft-sql-server)
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge\&logo=mysql)
+`Kafka` `RabbitMQ` `Redis` `Microservices` `Event-Driven Architecture`
 
-### Realtime & Caching
+### Real-time
 
-![SignalR](https://img.shields.io/badge/SignalR-00ADD8?style=for-the-badge)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge\&logo=redis)
+`SignalR` `WebSocket` `Redis GEO`
 
-### Messaging & Streaming
+### Databases
 
-![Kafka](https://img.shields.io/badge/Kafka-000000?style=for-the-badge\&logo=apache-kafka)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge\&logo=rabbitmq)
+`MySQL` `SQL Server`
 
-### DevOps & Tools
+### Infrastructure
 
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge\&logo=docker)
-![CI/CD](https://img.shields.io/badge/CI/CD-222222?style=for-the-badge)
-![Git](https://img.shields.io/badge/Git-222222?style=for-the-badge\&logo=git)
+`Docker` `Git` `CI/CD`
+
+### AI / LLM
+
+`OpenAI` `Gemini` `LLM APIs` `AI Translation`
 
 ---
 
-## 🚀 Featured Projects
+## Projects
 
-### 🚛 Real-time Container Dispatch System
+### 🔑 LlmKeyPool
 
-> A backend system for real-time vehicle/container dispatching
+**Provider-agnostic API key pool for .NET applications using multiple LLM API keys.**
 
-* Designed event-driven architecture using **Kafka + transactional outbox pattern**
-* Implemented **real-time location tracking** using Redis GEO
-* Built **real-time communication** with SignalR
-* Ensured reliability with manual Kafka consumer commit
-* Designed full workflow: booking → assign driver → tracking → completion
+Built to handle practical problems around multiple API keys:
 
-**Tech:** ASP.NET Core, MySQL, Redis, Kafka, SignalR, Docker, JWT
-🔗 https://github.com/PhucPM89/CargoLink
+- Key rotation
+- Quota-aware cooldown
+- Per-key concurrency limits
+- Durable health tracking
+- Rate limiting
+- Resilience
 
----
+Designed as a reusable .NET component rather than being tied to a single LLM provider.
 
-### 💬 Realtime Chat System
+**C# · .NET · NuGet · Rate Limiting · Resilience · Gemini · OpenAI**
 
-> Messenger-like chat system using SignalR
-
-* Built real-time messaging (group & private chat)
-* Implemented connection handling & message broadcasting
-* Designed scalable backend for concurrent users
-
-**Tech:** ASP.NET Core, SignalR, EF Core
+https://github.com/PhucPM89/LlmKeyPool
 
 ---
 
-### 💼 Intern Connect Platform
+### 🚛 CargoLink
 
-> Platform connecting students with businesses
+**Real-time truck dispatch system built with an event-driven architecture.**
 
-* Developed backend APIs for job, application, and internship management
-* Designed database schema for recruitment workflows
-* Optimized performance using Redis caching
-* Integrated AI for resume analysis
+Key engineering areas:
 
-**Tech:** ASP.NET Core, SQL Server, Redis, Docker
-🔗 https://internconnect.io.vn/
+- Kafka-based event processing
+- Transactional Outbox Pattern
+- Redis GEO for vehicle location tracking
+- SignalR for real-time communication
+- Reliable message consumption
+- Dispatch and tracking workflow
 
----
+**ASP.NET Core · Kafka · Redis · SignalR · MySQL · Docker**
 
-### 🚌 Bus Management System
-
-* Route management & scheduling system
-* Advanced filtering and search features
-* Clean MVC architecture
+https://github.com/PhucPM89/CargoLink
 
 ---
 
-## 📊 GitHub Analytics
+### 🌐 Trạm Chữ
 
-![stats](https://github-readme-stats.vercel.app/api?username=PhucPM89\&show_icons=true\&theme=tokyonight)
-![streak](https://streak-stats.demolab.com?user=PhucPM89\&theme=tokyonight)
+**AI-powered novel translation and reading platform.**
 
----
+Trạm Chữ is a web platform for reading translated novels, with an automated translation workflow for Chinese web novels.
 
-## 📈 Engineering Focus
+The `AutoTranslate` repository contains the translation-related system behind the platform.
 
-* Scalable Backend Architecture
-* Distributed Systems
-* Event-driven Design
-* Real-time Data Processing
+**JavaScript · LLM · AI Translation · Automation**
 
----
+Website: https://tram-chu.online/
 
-## 📫 Contact
-
-* 📧 [minhphuc2308031@gmail.com](mailto:minhphuc2308031@gmail.com)
+Repository: https://github.com/PhucPM89/AutoTranslate
 
 ---
 
-## ⚡ Philosophy
+### ⚙️ MiniMicroservice
 
-> “Building systems that scale is more important than building features that only work.”
+A .NET project for experimenting with **microservice architecture and distributed service communication**.
+
+**C# · .NET**
+
+https://github.com/PhucPM89/MiniMicroservice
+
+---
+
+## Engineering Focus
+
+**Distributed Systems**
+
+Microservices · Kafka · RabbitMQ · Event-Driven Architecture · Transactional Outbox · Asynchronous Processing · Failure Handling
+
+**Real-time Systems**
+
+SignalR · WebSocket · Redis · Redis GEO · Real-time Event Processing
+
+**AI Infrastructure**
+
+LLM APIs · API Key Management · Key Rotation · Rate Limiting · Concurrency Control · Quota Management · Resilience
+
+**Backend Engineering**
+
+ASP.NET Core · API Design · Database Design · Caching · Authentication · Performance · Scalability
+
+---
+
+## GitHub Stats
+
+<p align="center">
+  <img
+    src="https://github-readme-stats.vercel.app/api?username=PhucPM89&show_icons=true&theme=tokyonight&hide_border=true"
+    height="165"
+  />
+  <img
+    src="https://streak-stats.demolab.com?user=PhucPM89&theme=tokyonight&hide_border=true"
+    height="165"
+  />
+</p>
+
+---
+
+## Contact
+
+📧 minhphuc2308031@gmail.com
+
+---
+
+> **Build systems that don't fall apart when reality hits.**
