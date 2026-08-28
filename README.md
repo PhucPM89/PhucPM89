@@ -1,117 +1,131 @@
 <h1 align="center">Hi 👋, I'm Phúc</h1>
 
 <p align="center">
-  <b>Backend Engineer</b> · .NET · Distributed Systems · AI Infrastructure
+  <strong>Backend Engineer</strong> · .NET · Distributed Systems · AI Infrastructure
 </p>
 
 <p align="center">
-  Building backend systems around distributed communication, real-time processing, concurrency, and LLM infrastructure.
+  Building backend systems focused on scalability, reliability, concurrency, and real-time processing.
 </p>
 
 ---
 
-## About Me
+## 👨‍💻 About Me
 
 I'm a Backend Engineer primarily working with **C# and .NET**.
 
-I'm interested in:
+My main interests are:
 
-- Distributed systems & microservices
+- Distributed systems and microservices
 - Event-driven architecture
-- Kafka & RabbitMQ
+- Kafka and RabbitMQ
 - Real-time systems
-- Concurrency & rate limiting
-- Caching & distributed state
+- Concurrency and rate limiting
+- Caching and distributed state
 - AI / LLM infrastructure
-- Reliability & resilience
+- Reliability and resilience
 
-I prefer building things from real problems and understanding how systems behave under **load, concurrency, failure, and distributed communication**.
+I enjoy working on problems involving **concurrency, distributed communication, failure handling, and system scalability**.
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Backend
 
-`C#` `ASP.NET Core` `.NET` `Entity Framework Core`
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![EF Core](https://img.shields.io/badge/Entity_Framework_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 
 ### Distributed Systems
 
-`Kafka` `RabbitMQ` `Redis` `Microservices` `Event-Driven Architecture`
-
-### Real-time
-
-`SignalR` `WebSocket` `Redis GEO`
+![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
 ### Databases
 
-`MySQL` `SQL Server`
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+
+### Real-time
+
+![SignalR](https://img.shields.io/badge/SignalR-00ADD8?style=for-the-badge&logo=dotnet&logoColor=white)
+![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=websocket&logoColor=white)
 
 ### Infrastructure
 
-`Docker` `Git` `CI/CD`
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-222222?style=for-the-badge)
 
 ### AI / LLM
 
-`OpenAI` `Gemini` `LLM APIs` `AI Translation`
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
 
 ---
 
-## Projects
+## 🚀 Featured Projects
 
 ### 🔑 LlmKeyPool
 
-**Provider-agnostic API key pool for .NET applications using multiple LLM API keys.**
+A **provider-agnostic API key pool for .NET applications** that work with multiple LLM API keys.
 
-Built to handle practical problems around multiple API keys:
+Designed around practical problems that appear when operating multiple API keys:
 
 - Key rotation
 - Quota-aware cooldown
 - Per-key concurrency limits
-- Durable health tracking
+- Health tracking
 - Rate limiting
-- Resilience
+- Resilience and failure handling
 
-Designed as a reusable .NET component rather than being tied to a single LLM provider.
+The goal is to provide a reusable infrastructure component that can sit between an application and multiple LLM providers.
 
-**C# · .NET · NuGet · Rate Limiting · Resilience · Gemini · OpenAI**
+**C# · .NET · NuGet · Rate Limiting · Concurrency · Resilience**
 
-https://github.com/PhucPM89/LlmKeyPool
+[View Repository](https://github.com/PhucPM89/LlmKeyPool)
 
 ---
 
 ### 🚛 CargoLink
 
-**Real-time truck dispatch system built with an event-driven architecture.**
+A **real-time truck dispatch system** built around event-driven architecture.
 
-Key engineering areas:
+The project explores reliable asynchronous processing together with real-time operations.
 
-- Kafka-based event processing
+**Key components:**
+
+- Apache Kafka for event-driven communication
 - Transactional Outbox Pattern
 - Redis GEO for vehicle location tracking
-- SignalR for real-time communication
-- Reliable message consumption
+- SignalR for real-time updates
+- Reliable Kafka message processing
 - Dispatch and tracking workflow
 
 **ASP.NET Core · Kafka · Redis · SignalR · MySQL · Docker**
 
-https://github.com/PhucPM89/CargoLink
+[View Repository](https://github.com/PhucPM89/CargoLink)
 
 ---
 
 ### 🌐 Trạm Chữ
 
-**AI-powered novel translation and reading platform.**
+**Trạm Chữ** is a web platform for reading translated novels.
 
-Trạm Chữ is a web platform for reading translated novels, with an automated translation workflow for Chinese web novels.
+The platform uses an automated translation workflow to process Chinese web novels into Vietnamese and publish the translated content for readers.
 
-The `AutoTranslate` repository contains the translation-related system behind the platform.
+**Platform**
+
+🌐 https://tram-chu.online/
+
+**Repository**
+
+[AutoTranslate](https://github.com/PhucPM89/AutoTranslate)
 
 **JavaScript · LLM · AI Translation · Automation**
-
-Website: https://tram-chu.online/
-
-Repository: https://github.com/PhucPM89/AutoTranslate
 
 ---
 
@@ -119,33 +133,33 @@ Repository: https://github.com/PhucPM89/AutoTranslate
 
 A .NET project for experimenting with **microservice architecture and distributed service communication**.
 
-**C# · .NET**
+**C# · .NET · Microservices**
 
-https://github.com/PhucPM89/MiniMicroservice
-
----
-
-## Engineering Focus
-
-**Distributed Systems**
-
-Microservices · Kafka · RabbitMQ · Event-Driven Architecture · Transactional Outbox · Asynchronous Processing · Failure Handling
-
-**Real-time Systems**
-
-SignalR · WebSocket · Redis · Redis GEO · Real-time Event Processing
-
-**AI Infrastructure**
-
-LLM APIs · API Key Management · Key Rotation · Rate Limiting · Concurrency Control · Quota Management · Resilience
-
-**Backend Engineering**
-
-ASP.NET Core · API Design · Database Design · Caching · Authentication · Performance · Scalability
+[View Repository](https://github.com/PhucPM89/MiniMicroservice)
 
 ---
 
-## GitHub Stats
+## 🧠 Engineering Interests
+
+### Distributed Systems
+
+`Microservices` · `Kafka` · `RabbitMQ` · `Event-Driven Architecture` · `Transactional Outbox` · `Asynchronous Processing`
+
+### Real-time Systems
+
+`SignalR` · `WebSocket` · `Redis` · `Redis GEO` · `Real-time Event Processing`
+
+### AI Infrastructure
+
+`LLM APIs` · `API Key Management` · `Key Rotation` · `Rate Limiting` · `Concurrency Control` · `Quota Management` · `Resilience`
+
+### Backend Engineering
+
+`ASP.NET Core` · `API Design` · `Database Design` · `Caching` · `Authentication` · `Performance` · `Scalability`
+
+---
+
+## 📊 GitHub Stats
 
 <p align="center">
   <img
@@ -160,10 +174,12 @@ ASP.NET Core · API Design · Database Design · Caching · Authentication · Pe
 
 ---
 
-## Contact
+## 📫 Contact
 
-📧 minhphuc2308031@gmail.com
+📧 [minhphuc2308031@gmail.com](mailto:minhphuc2308031@gmail.com)
 
 ---
 
-> **Build systems that don't fall apart when reality hits.**
+<p align="center">
+  <i>Build systems that remain reliable when reality hits.</i>
+</p>
