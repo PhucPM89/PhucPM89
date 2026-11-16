@@ -1,185 +1,113 @@
-<h1 align="center">Hi 👋, I'm Phúc</h1>
+# Hi 👋, I'm Phúc
 
-<p align="center">
-  <strong>Backend Engineer</strong> · .NET · Distributed Systems · AI Infrastructure
-</p>
+\<p align="center">
+&#x20; \<strong>Backend Engineer\</strong>
+&#x20; \<br/>
+&#x20; .NET · Distributed Systems · Backend Architecture
+\</p>
 
-<p align="center">
-  Building backend systems focused on scalability, reliability, concurrency, and real-time processing.
-</p>
-
----
-
-## 👨‍💻 About Me
-
-I'm a Backend Engineer primarily working with **C# and .NET**.
-
-My main interests are:
-
-- Distributed systems and microservices
-- Event-driven architecture
-- Kafka and RabbitMQ
-- Real-time systems
-- Concurrency and rate limiting
-- Caching and distributed state
-- AI / LLM infrastructure
-- Reliability and resilience
-
-I enjoy working on problems involving **concurrency, distributed communication, failure handling, and system scalability**.
+\<p align="center">
+&#x20; Building reliable, scalable, and maintainable backend systems.
+\</p>
 
 ---
 
-## 🛠️ Tech Stack
+## 👨‍💻 Engineering Profile
 
-### Backend
+Backend Engineer specializing in C# and .NET ecosystem, with a strong interest in distributed systems, system architecture, and backend infrastructure.
 
-![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
-![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![EF Core](https://img.shields.io/badge/Entity_Framework_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+Focused on engineering challenges involving:
 
-### Distributed Systems
+- Distributed communication and service coordination
+- Concurrent processing and resource management
+- Data consistency and transaction integrity
+- Asynchronous workflows and event-driven architecture
+- Fault tolerance and system reliability
+- Performance optimization and scalability
 
-![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-
-### Databases
-
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
-
-### Real-time
-
-![SignalR](https://img.shields.io/badge/SignalR-00ADD8?style=for-the-badge&logo=dotnet&logoColor=white)
-![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=websocket&logoColor=white)
-
-### Infrastructure
-
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![CI/CD](https://img.shields.io/badge/CI%2FCD-222222?style=for-the-badge)
-
-### AI / LLM
-
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
-![Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
+I value clean architecture, pragmatic engineering decisions, and building systems that remain predictable under failure.
 
 ---
 
-## 🚀 Featured Projects
+## 🛠️ Technical Expertise
 
-### 🔑 LlmKeyPool
+**Backend Engineering**
 
-A **provider-agnostic API key pool for .NET applications** that work with multiple LLM API keys.
+`C#` ` .NET` `ASP.NET Core` `Entity Framework Core` `RESTful API`
 
-Designed around practical problems that appear when operating multiple API keys:
+**Distributed Systems**
 
-- Key rotation
-- Quota-aware cooldown
-- Per-key concurrency limits
-- Health tracking
-- Rate limiting
-- Resilience and failure handling
+`Microservices` `Apache Kafka` `RabbitMQ` `Event-Driven Architecture` `Transactional Outbox`
 
-The goal is to provide a reusable infrastructure component that can sit between an application and multiple LLM providers.
+**Data & Caching**
 
-**C# · .NET · NuGet · Rate Limiting · Concurrency · Resilience**
+`SQL Server` `MySQL` `PostgreSQL` `Redis` `Database Optimization`
 
-[View Repository](https://github.com/PhucPM89/LlmKeyPool)
+**Concurrency & Reliability**
 
----
+`Concurrency Control` `Rate Limiting` `Idempotency` `Retry Policies` `Fault Tolerance`
 
-### 🚛 CargoLink
+**Real-time Communication**
 
-A **real-time truck dispatch system** built around event-driven architecture.
+`SignalR` `WebSocket` `Redis GEO`
 
-The project explores reliable asynchronous processing together with real-time operations.
+**Infrastructure & DevOps**
 
-**Key components:**
+`Docker` `Git` `GitHub Actions` `CI/CD`
 
-- Apache Kafka for event-driven communication
-- Transactional Outbox Pattern
-- Redis GEO for vehicle location tracking
-- SignalR for real-time updates
-- Reliable Kafka message processing
-- Dispatch and tracking workflow
+**AI Infrastructure**
 
-**ASP.NET Core · Kafka · Redis · SignalR · MySQL · Docker**
-
-[View Repository](https://github.com/PhucPM89/CargoLink)
+`LLM Integration` `API Key Management` `Quota Management` `Provider Abstraction`
 
 ---
 
-### 🌐 Trạm Chữ
+## 🧠 Engineering Principles
 
-**Trạm Chữ** is a web platform for reading translated novels.
+**Reliability First**
 
-The platform uses an automated translation workflow to process Chinese web novels into Vietnamese and publish the translated content for readers.
+Design for failure, not just the happy path. Consider timeouts, retries, partial failures, and recovery mechanisms.
 
-**Platform**
+**Consistency Matters**
 
-🌐 https://tram-chu.online/
+Understand transaction boundaries, isolation levels, concurrency conflicts, and distributed data consistency.
 
-**Repository**
+**Pragmatic Architecture**
 
-[AutoTranslate](https://github.com/PhucPM89/AutoTranslate)
+Choose architectural patterns based on business requirements, operational complexity, and long-term maintainability.
 
-**JavaScript · LLM · AI Translation · Automation**
+**Performance Through Measurement**
 
----
+Identify bottlenecks through profiling, monitoring, and benchmarking rather than premature optimization.
 
-### ⚙️ MiniMicroservice
+**Maintainability by Design**
 
-A .NET project for experimenting with **microservice architecture and distributed service communication**.
-
-**C# · .NET · Microservices**
-
-[View Repository](https://github.com/PhucPM89/MiniMicroservice)
+Build modular, testable systems with clear boundaries, explicit contracts, and well-defined responsibilities.
 
 ---
 
-## 🧠 Engineering Interests
+## 📚 Currently Exploring
 
-### Distributed Systems
-
-`Microservices` · `Kafka` · `RabbitMQ` · `Event-Driven Architecture` · `Transactional Outbox` · `Asynchronous Processing`
-
-### Real-time Systems
-
-`SignalR` · `WebSocket` · `Redis` · `Redis GEO` · `Real-time Event Processing`
-
-### AI Infrastructure
-
-`LLM APIs` · `API Key Management` · `Key Rotation` · `Rate Limiting` · `Concurrency Control` · `Quota Management` · `Resilience`
-
-### Backend Engineering
-
-`ASP.NET Core` · `API Design` · `Database Design` · `Caching` · `Authentication` · `Performance` · `Scalability`
+- Distributed Systems Design
+- Advanced .NET Performance
+- Event-Driven Architecture
+- Database Internals & Transaction Management
+- System Reliability & Resilience
+- AI Infrastructure & LLM Orchestration
 
 ---
 
-## 📊 GitHub Stats
+## 📊 GitHub Activity
 
-<p align="center">
-  <img
-    src="https://github-readme-stats.vercel.app/api?username=PhucPM89&show_icons=true&theme=tokyonight&hide_border=true"
-    height="165"
-  />
-  <img
-    src="https://streak-stats.demolab.com?user=PhucPM89&theme=tokyonight&hide_border=true"
-    height="165"
-  />
-</p>
+\<p align="center">   \<img src="[https://github-readme-stats.vercel.app/api?username=PhucPM89&show_icons=true&theme=tokyonight&hide_border=true](https://github-readme-stats.vercel.app/api?username=PhucPM89\&show_icons=true\&theme=tokyonight\&hide_border=true)" height="165"/>   \<img src="[https://streak-stats.demolab.com?user=PhucPM89&theme=tokyonight&hide_border=true](https://streak-stats.demolab.com?user=PhucPM89\&theme=tokyonight\&hide_border=true)" height="165"/> \</p>
 
 ---
 
 ## 📫 Contact
 
-📧 [minhphuc2308031@gmail.com](mailto:minhphuc2308031@gmail.com)
+📧 [minhphuc2308031@gmail.com](mailto\:minhphuc2308031@gmail.com)
 
 ---
 
-<p align="center">
-  <i>Build systems that remain reliable when reality hits.</i>
-</p>
+\<p align="center">
+&#x20; \<i>Engineering is about making complexity manageable.\</i>
+\</p>
