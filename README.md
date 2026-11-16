@@ -1,113 +1,67 @@
-# Hi 👋, I'm Phúc
+<h1 align="center">Phúc · Backend Engineer</h1>
 
-\<p align="center">
-&#x20; \<strong>Backend Engineer\</strong>
-&#x20; \<br/>
-&#x20; .NET · Distributed Systems · Backend Architecture
-\</p>
+<p align="center">
+  <b>.NET · Distributed Systems · Reliability Engineering</b>
+</p>
 
-\<p align="center">
-&#x20; Building reliable, scalable, and maintainable backend systems.
-\</p>
+<p align="center">
+  <i>I build backend systems that stay correct and predictable when things fail.</i>
+</p>
 
----
-
-## 👨‍💻 Engineering Profile
-
-Backend Engineer specializing in C# and .NET ecosystem, with a strong interest in distributed systems, system architecture, and backend infrastructure.
-
-Focused on engineering challenges involving:
-
-- Distributed communication and service coordination
-- Concurrent processing and resource management
-- Data consistency and transaction integrity
-- Asynchronous workflows and event-driven architecture
-- Fault tolerance and system reliability
-- Performance optimization and scalability
-
-I value clean architecture, pragmatic engineering decisions, and building systems that remain predictable under failure.
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=cs,dotnet,kafka,rabbitmq,postgres,redis,docker,githubactions&perline=8" />
+</p>
 
 ---
 
-## 🛠️ Technical Expertise
+## 🎯 Focus
 
-**Backend Engineering**
+I work on the part of backend engineering where "it works" is not enough:
+data must stay consistent, messages must be neither lost nor processed twice,
+and the system must degrade gracefully when a dependency goes down.
 
-`C#` ` .NET` `ASP.NET Core` `Entity Framework Core` `RESTful API`
+## 🧩 How I approach problems
 
-**Distributed Systems**
+**📨 Messaging without lost or duplicate events**
+Dual writes to a database and a broker silently lose events. I use the
+Transactional Outbox so state and events commit atomically, and idempotent
+consumers so at-least-once delivery never produces duplicate side effects.
 
-`Microservices` `Apache Kafka` `RabbitMQ` `Event-Driven Architecture` `Transactional Outbox`
+**🔒 Consistency and concurrency, chosen per workflow**
+Optimistic concurrency where conflicts are rare and throughput matters.
+Pessimistic locking only where contention is high and correctness is critical.
+Isolation levels are a deliberate decision, not a default.
 
-**Data & Caching**
+**🛡️ Failure is a design input**
+Timeouts on every outbound call, retries with backoff and jitter, circuit
+breakers around unstable dependencies, and idempotency keys on write endpoints
+so clients can retry safely.
 
-`SQL Server` `MySQL` `PostgreSQL` `Redis` `Database Optimization`
+**⚡ Measure before optimizing**
+Profile, find the real bottleneck, change one thing, measure again.
 
-**Concurrency & Reliability**
+**🤖 LLM infrastructure**
+Provider abstraction so vendors and models are swappable, with API key
+management and per-key quota control to contain cost and abuse.
 
-`Concurrency Control` `Rate Limiting` `Idempotency` `Retry Policies` `Fault Tolerance`
+**📡 Real-time systems**
+SignalR and WebSocket for live updates, Redis GEO for location queries.
 
-**Real-time Communication**
+## 🧰 Stack
 
-`SignalR` `WebSocket` `Redis GEO`
-
-**Infrastructure & DevOps**
-
-`Docker` `Git` `GitHub Actions` `CI/CD`
-
-**AI Infrastructure**
-
-`LLM Integration` `API Key Management` `Quota Management` `Provider Abstraction`
-
----
-
-## 🧠 Engineering Principles
-
-**Reliability First**
-
-Design for failure, not just the happy path. Consider timeouts, retries, partial failures, and recovery mechanisms.
-
-**Consistency Matters**
-
-Understand transaction boundaries, isolation levels, concurrency conflicts, and distributed data consistency.
-
-**Pragmatic Architecture**
-
-Choose architectural patterns based on business requirements, operational complexity, and long-term maintainability.
-
-**Performance Through Measurement**
-
-Identify bottlenecks through profiling, monitoring, and benchmarking rather than premature optimization.
-
-**Maintainability by Design**
-
-Build modular, testable systems with clear boundaries, explicit contracts, and well-defined responsibilities.
-
----
-
-## 📚 Currently Exploring
-
-- Distributed Systems Design
-- Advanced .NET Performance
-- Event-Driven Architecture
-- Database Internals & Transaction Management
-- System Reliability & Resilience
-- AI Infrastructure & LLM Orchestration
-
----
-
-## 📊 GitHub Activity
-
-\<p align="center">   \<img src="[https://github-readme-stats.vercel.app/api?username=PhucPM89&show_icons=true&theme=tokyonight&hide_border=true](https://github-readme-stats.vercel.app/api?username=PhucPM89\&show_icons=true\&theme=tokyonight\&hide_border=true)" height="165"/>   \<img src="[https://streak-stats.demolab.com?user=PhucPM89&theme=tokyonight&hide_border=true](https://streak-stats.demolab.com?user=PhucPM89\&theme=tokyonight\&hide_border=true)" height="165"/> \</p>
+| | |
+|---|---|
+| **Backend** | C# · .NET · ASP.NET Core · EF Core |
+| **Messaging** | Kafka · RabbitMQ |
+| **Data** | SQL Server · PostgreSQL · Redis |
+| **Ops** | Docker · GitHub Actions · CI/CD |
 
 ---
 
 ## 📫 Contact
 
-📧 [minhphuc2308031@gmail.com](mailto\:minhphuc2308031@gmail.com)
+[![Email](https://img.shields.io/badge/Email-minhphuc2308031@gmail.com-D14836?style=flat&logo=gmail&logoColor=white)](mailto:minhphuc2308031@gmail.com)
 
----
-
-\<p align="center">
-&#x20; \<i>Engineering is about making complexity manageable.\</i>
-\</p>
+<p align="center">
+  <i>Engineering is about making complexity manageable.</i>
+</p>
