@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 236" width="100%" role="img" aria-label="Token Family Lineage handling cross-tab refresh race versus stolen replay revocation and PostgreSQL RLS">
+  <defs>
+    <marker id="arr-l4-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#cf222e" />
+    </marker>
+    <marker id="arr-l4-grn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#1a7f37" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="838" height="234" rx="8" fill="#ffffff" stroke="#d0d7de" stroke-width="1.2" />
+  <text x="24" y="27" fill="#656d76" font-family="ui-monospace, monospace" font-size="10.5" letter-spacing="1.1">
+    ZERO-TRUST SESSION LINEAGE // CROSS-TAB RACE VS. REUSE DETECTION &amp; TENANT RLS
+  </text>
+
+  <rect x="20" y="42" width="800" height="84" rx="6" fill="#f6f8fa" stroke="#2da44e" stroke-width="1" />
+  <text x="34" y="61" fill="#1a7f37" font-family="ui-monospace, monospace" font-size="10" font-weight="600">
+    LEGITIMATE MULTI-TAB REFRESH RACE (SAME CLIENT + 5s GRACE WINDOW)
+  </text>
+
+  <rect x="34" y="72" width="160" height="42" rx="4" fill="#ffffff" stroke="#d0d7de" />
+  <text x="44" y="89" fill="#1f2328" font-family="ui-monospace, monospace" font-size="9.5">Tab A + Tab B send J1</text>
+  <text x="44" y="104" fill="#0969da" font-family="ui-monospace, monospace" font-size="9">Within 40ms · Tab mutex</text>
+
+  <line x1="194" y1="93" x2="236" y2="93" stroke="#1a7f37" stroke-width="1.3" marker-end="url(#arr-l4-grn)" />
+  <circle cy="93" r="3" fill="#1a7f37">
+    <animate attributeName="cx" values="196;232" dur="2.6s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" />
+  </circle>
+
+  <rect x="240" y="72" width="222" height="42" rx="4" fill="#ffffff" stroke="#d0d7de" />
+  <text x="250" y="89" fill="#1f2328" font-family="ui-monospace, monospace" font-size="9.5">Lineage: (F1, pred=J1) -&gt; J2</text>
+  <text x="250" y="104" fill="#57606a" font-family="ui-monospace, monospace" font-size="9">Tab B hits grace cache -&gt; gets J2</text>
+
+  <line x1="462" y1="93" x2="504" y2="93" stroke="#1a7f37" stroke-width="1.3" marker-end="url(#arr-l4-grn)" />
+
+  <rect x="508" y="72" width="296" height="42" rx="4" fill="#dafbe1" stroke="#1a7f37" />
+  <text x="518" y="89" fill="#1a7f37" font-family="ui-monospace, monospace" font-size="9.5" font-weight="600">SESSION PRESERVED · ZERO FALSE LOGOUT</text>
+  <text x="518" y="104" fill="#57606a" font-family="ui-monospace, monospace" font-size="9">RLS DB Context: SET LOCAL app.tenant_id</text>
+
+  <rect x="20" y="138" width="800" height="84" rx="6" fill="#f6f8fa" stroke="#ff8182" stroke-width="1" />
+  <text x="34" y="157" fill="#cf222e" font-family="ui-monospace, monospace" font-size="10" font-weight="600">
+    STOLEN TOKEN REPLAY / ENVIRONMENT DRIFT (AFTER GRACE WINDOW)
+  </text>
+
+  <rect x="34" y="168" width="184" height="42" rx="4" fill="#ffffff" stroke="#cf222e" stroke-dasharray="3 2" />
+  <text x="44" y="185" fill="#1f2328" font-family="ui-monospace, monospace" font-size="9.5">Attacker replays old J1</text>
+  <text x="44" y="200" fill="#cf222e" font-family="ui-monospace, monospace" font-size="9">New fingerprint + past TTL</text>
+
+  <line x1="218" y1="189" x2="262" y2="189" stroke="#cf222e" stroke-width="1.3" marker-end="url(#arr-l4-red)" />
+  <circle cy="189" r="3" fill="#cf222e">
+    <animate attributeName="cx" values="220;258" dur="2.2s" begin="0.4s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.2s" begin="0.4s" repeatCount="indefinite" />
+  </circle>
+
+  <rect x="266" y="168" width="234" height="42" rx="4" fill="#ffebe9" stroke="#cf222e">
+    <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite" />
+  </rect>
+  <text x="276" y="185" fill="#cf222e" font-family="ui-monospace, monospace" font-size="9.5" font-weight="600">FAMILY F1 REVOKED IMMEDIATELY</text>
+  <text x="276" y="200" fill="#57606a" font-family="ui-monospace, monospace" font-size="9">All descendant tokens (J1..Jn) killed</text>
+
+  <line x1="500" y1="189" x2="540" y2="189" stroke="#cf222e" stroke-width="1.3" marker-end="url(#arr-l4-red)" />
+
+  <rect x="544" y="168" width="260" height="42" rx="4" fill="#ffffff" stroke="#d4a72c" />
+  <text x="554" y="185" fill="#9a6700" font-family="ui-monospace, monospace" font-size="9.5" font-weight="600">STEP-UP TOTP / SMS MFA CHALLENGE</text>
+  <text x="554" y="200" fill="#57606a" font-family="ui-monospace, monospace" font-size="9">Re-verify identity before new family F2</text>
+</svg>

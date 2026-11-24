@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 244" width="100%" role="img" aria-label="Metastatic Retry Storm versus Deadline Propagation, Retry Budgets, and Fencing Tokens">
+  <defs>
+    <marker id="arr-d3-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#f78166" />
+    </marker>
+    <marker id="arr-d3-grn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#3fb950" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="838" height="242" rx="8" fill="#0d1117" stroke="#30363d" stroke-width="1.2" />
+  <text x="24" y="27" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10.5" letter-spacing="1.1">
+    TAIL LATENCY &amp; CONCURRENCY SAFETY // RETRY AMPLIFICATION VS. BUDGETS + FENCING TOKENS
+  </text>
+
+  <!-- LEFT: METASTATIC RETRY AMPLIFICATION -->
+  <rect x="20" y="42" width="386" height="186" rx="6" fill="#161b22" stroke="#6e3630" stroke-width="1" />
+  <text x="34" y="61" fill="#f78166" font-family="ui-monospace, monospace" font-size="10" font-weight="600">
+    UNBOUNDED RETRIES -> METASTATIC COLLAPSE (3x3x3 = 27x)
+  </text>
+
+  <rect x="34" y="76" width="82" height="52" rx="4" fill="#0d1117" stroke="#30363d" />
+  <text x="42" y="96" fill="#f0f6fc" font-family="ui-monospace, monospace" font-size="10">Gateway</text>
+  <text x="42" y="114" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9">1x · 3 retries</text>
+
+  <line x1="116" y1="102" x2="152" y2="102" stroke="#f78166" stroke-width="1.3" marker-end="url(#arr-d3-red)" />
+  <circle cy="98" r="2.5" fill="#f78166">
+    <animate attributeName="cx" values="118;148" dur="1.4s" begin="0s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="106" r="2.5" fill="#f78166">
+    <animate attributeName="cx" values="118;148" dur="1.4s" begin="0.45s" repeatCount="indefinite" />
+  </circle>
+
+  <rect x="156" y="76" width="88" height="52" rx="4" fill="#0d1117" stroke="#d29922" />
+  <text x="164" y="96" fill="#f0f6fc" font-family="ui-monospace, monospace" font-size="10">Service A</text>
+  <text x="164" y="114" fill="#d29922" font-family="ui-monospace, monospace" font-size="9">3x · 3 retries</text>
+
+  <line x1="244" y1="102" x2="282" y2="102" stroke="#f78166" stroke-width="2" marker-end="url(#arr-d3-red)" />
+  <circle cy="95" r="2.5" fill="#f78166">
+    <animate attributeName="cx" values="246;278" dur="0.9s" begin="0s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="102" r="2.5" fill="#f78166">
+    <animate attributeName="cx" values="246;278" dur="0.9s" begin="0.3s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="109" r="2.5" fill="#f78166">
+    <animate attributeName="cx" values="246;278" dur="0.9s" begin="0.6s" repeatCount="indefinite" />
+  </circle>
+
+  <rect x="286" y="76" width="106" height="52" rx="4" fill="#251315" stroke="#f78166">
+    <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" />
+  </rect>
+  <text x="294" y="96" fill="#f78166" font-family="ui-monospace, monospace" font-size="10" font-weight="600">DB / Svc B</text>
+  <text x="294" y="114" fill="#f78166" font-family="ui-monospace, monospace" font-size="9">27x load · OOM</text>
+
+  <!-- Bottom left summary -->
+  <rect x="34" y="144" width="358" height="68" rx="4" fill="#0d1117" stroke="#30363d" />
+  <text x="44" y="164" fill="#f0f6fc" font-family="ui-monospace, monospace" font-size="9.5">Why recovery stalls after traffic drops:</text>
+  <text x="44" y="182" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9">Queued retries saturate thread pools + sockets</text>
+  <text x="44" y="198" fill="#f78166" font-family="ui-monospace, monospace" font-size="9">Work expires before caller ever reads response.</text>
+
+  <!-- RIGHT: DEADLINE + RETRY BUDGET + FENCING -->
+  <rect x="424" y="42" width="396" height="186" rx="6" fill="#161b22" stroke="#238636" stroke-width="1" />
+  <text x="438" y="61" fill="#3fb950" font-family="ui-monospace, monospace" font-size="10" font-weight="600">
+    DEADLINE BUDGET (&lt;=10% RETRY) + DB FENCING TOKEN
+  </text>
+
+  <!-- Deadline bar -->
+  <text x="438" y="83" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9">Propagated Deadline (800ms remaining):</text>
+  <rect x="438" y="90" width="366" height="10" rx="2" fill="#0d1117" stroke="#30363d" />
+  <rect x="438" y="90" width="366" height="10" rx="2" fill="#238636">
+    <animate attributeName="width" values="366;210;90;366" dur="4.2s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- Fencing token comparison -->
+  <rect x="438" y="114" width="174" height="50" rx="4" fill="#0d1117" stroke="#f78166" stroke-dasharray="3 2" />
+  <text x="446" y="132" fill="#f0f6fc" font-family="ui-monospace, monospace" font-size="9.5">Worker 1 (GC Pause)</text>
+  <text x="446" y="148" fill="#f78166" font-family="ui-monospace, monospace" font-size="9">Redis expired · fence=33</text>
+
+  <rect x="630" y="114" width="174" height="50" rx="4" fill="#0d1117" stroke="#3fb950" />
+  <text x="638" y="132" fill="#f0f6fc" font-family="ui-monospace, monospace" font-size="9.5">Worker 2 (Active)</text>
+  <text x="638" y="148" fill="#3fb950" font-family="ui-monospace, monospace" font-size="9">New lease · fence=34</text>
+
+  <!-- Authoritative DB boundary -->
+  <rect x="438" y="176" width="366" height="38" rx="4" fill="#0f2318" stroke="#3fb950" />
+  <text x="448" y="194" fill="#7ee787" font-family="ui-monospace, monospace" font-size="9.5" font-weight="600">
+    DB Guard: WHERE last_fence &lt; @token
+  </text>
+  <text x="448" y="207" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9">
+    Worker 2(34) commits · Zombie Worker 1(33) rejected
+  </text>
+</svg>
