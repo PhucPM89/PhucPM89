@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 218" width="100%" role="img" aria-label="Transactional Outbox, CDC Relay, Message Broker, Idempotent Inbox, and DLQ Replay Architecture">
+  <defs>
+    <marker id="arrow-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#8b949e" />
+    </marker>
+    <marker id="arrow-warn-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#f78166" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="838" height="216" rx="8" fill="#0d1117" stroke="#30363d" stroke-width="1.2" />
+
+  <text x="24" y="28" fill="#8b949e" font-family="ui-monospace, 'Cascadia Mono', 'SFMono-Regular', Menlo, monospace" font-size="10.5" letter-spacing="1.2">
+    RELIABILITY PIPELINE // ZERO DUAL-WRITE WINDOW &amp; REPLAY-SAFE CONSUMPTION
+  </text>
+
+  <!-- Main horizontal wires -->
+  <line x1="136" y1="92" x2="170" y2="92" stroke="#484f58" stroke-width="1.5" marker-end="url(#arrow-dark)" />
+  <line x1="316" y1="92" x2="350" y2="92" stroke="#484f58" stroke-width="1.5" marker-end="url(#arrow-dark)" />
+  <line x1="482" y1="92" x2="516" y2="92" stroke="#484f58" stroke-width="1.5" marker-end="url(#arrow-dark)" />
+  <line x1="646" y1="92" x2="680" y2="92" stroke="#484f58" stroke-width="1.5" marker-end="url(#arrow-dark)" />
+
+  <!-- Animated packets -->
+  <circle cy="92" r="3.5" fill="#58a6ff">
+    <animate attributeName="cx" values="138;168" dur="2.4s" begin="0s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="0s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="92" r="3.5" fill="#3fb950">
+    <animate attributeName="cx" values="318;348" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="92" r="3.5" fill="#58a6ff">
+    <animate attributeName="cx" values="484;514" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+  </circle>
+  <circle cy="92" r="3.5" fill="#3fb950">
+    <animate attributeName="cx" values="648;678" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Node 1: Client -->
+  <g transform="translate(24, 48)">
+    <rect width="112" height="88" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+    <text x="12" y="22" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.8">01. REQUEST</text>
+    <text x="12" y="45" fill="#f0f6fc" font-family="'Segoe UI', sans-serif" font-size="13.5" font-weight="600">Write API</text>
+    <text x="12" y="63" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10">Idempotency-Key</text>
+    <text x="12" y="77" fill="#58a6ff" font-family="ui-monospace, monospace" font-size="9.5">Safe client retry</text>
+  </g>
+
+  <!-- Node 2: ACID Commit -->
+  <g transform="translate(174, 48)">
+    <rect width="142" height="88" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="1.2">
+      <animate attributeName="stroke-opacity" values="0.65;1;0.65" dur="2.4s" repeatCount="indefinite" />
+    </rect>
+    <text x="12" y="22" fill="#3fb950" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.8">02. ACID COMMIT</text>
+    <text x="12" y="45" fill="#f0f6fc" font-family="'Segoe UI', sans-serif" font-size="13.5" font-weight="600">State + Outbox</text>
+    <text x="12" y="63" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10">Postgres / SQL Srv</text>
+    <text x="12" y="77" fill="#7ee787" font-family="ui-monospace, monospace" font-size="9.5">Single atomic tx</text>
+  </g>
+
+  <!-- Node 3: Relay -->
+  <g transform="translate(354, 48)">
+    <rect width="128" height="88" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+    <text x="12" y="22" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.8">03. RELAY</text>
+    <text x="12" y="45" fill="#f0f6fc" font-family="'Segoe UI', sans-serif" font-size="13.5" font-weight="600">CDC / Poller</text>
+    <text x="12" y="63" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10">Debezium / WAL</text>
+    <text x="12" y="77" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9.5">At-least-once</text>
+  </g>
+
+  <!-- Node 4: Broker -->
+  <g transform="translate(520, 48)">
+    <rect width="126" height="88" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+    <text x="12" y="22" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.8">04. BROKER</text>
+    <text x="12" y="45" fill="#f0f6fc" font-family="'Segoe UI', sans-serif" font-size="13.5" font-weight="600">Event Stream</text>
+    <text x="12" y="63" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10">Kafka / RabbitMQ</text>
+    <text x="12" y="77" fill="#58a6ff" font-family="ui-monospace, monospace" font-size="9.5">Partition ordered</text>
+  </g>
+
+  <!-- Node 5: Consumer -->
+  <g transform="translate(684, 48)">
+    <rect width="132" height="88" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.2" />
+    <text x="12" y="22" fill="#58a6ff" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.8">05. CONSUMER</text>
+    <text x="12" y="45" fill="#f0f6fc" font-family="'Segoe UI', sans-serif" font-size="13.5" font-weight="600">Inbox Dedup</text>
+    <text x="12" y="63" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10">Unique message_id</text>
+    <text x="12" y="77" fill="#7ee787" font-family="ui-monospace, monospace" font-size="9.5">0 duplicate effect</text>
+  </g>
+
+  <!-- Failure / DLQ path -->
+  <path d="M 750 136 L 750 176 L 672 176" fill="none" stroke="#f78166" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-warn-dark)" />
+
+  <g transform="translate(474, 154)">
+    <rect width="194" height="44" rx="5" fill="#161b22" stroke="#6e3630" stroke-width="1" />
+    <text x="12" y="19" fill="#f78166" font-family="ui-monospace, monospace" font-size="9.5" letter-spacing="0.6">FAILURE PATH · DLQ + REPLAY</text>
+    <text x="12" y="34" fill="#8b949e" font-family="ui-monospace, monospace" font-size="9.5">Jittered backoff -&gt; Dead Letter</text>
+  </g>
+
+  <text x="24" y="180" fill="#8b949e" font-family="ui-monospace, monospace" font-size="10.5">
+    Invariant: state mutation &amp; event intent commit together; retries stay safe.
+  </text>
+</svg>
