@@ -12,11 +12,11 @@
 
 ---
 
-### Engineering Thesis
+### Focus
 
-Making a system work when every service is fast and healthy is the easy part. The hard part is handling **chain-reaction failures**: polling relays skipping uncommitted rows, snapshot isolation allowing write skew, retry storms turning a short slowdown into a full outage, and GC pauses breaking cache-only locks.
+Getting code to work when every database, broker, and API responds in 10ms is the easy part. Most real production bugs happen in the second-order failures: polling relays skipping uncommitted rows, snapshot isolation allowing write skew, retry storms keeping a degraded service down, and GC pauses breaking cache-only locks.
 
-I design backend systems around **data invariants and failure boundaries**—assuming network timeouts, duplicate events, clock drift, and slow dependencies will happen in production.
+I build backend systems around data invariants and explicit failure boundaries, assuming timeouts, duplicate deliveries, clock drift, and partial outages are normal operating states.
 
 <p align="center">
   <picture>
@@ -40,9 +40,9 @@ I design backend systems around **data invariants and failure boundaries**—ass
   </picture>
 </p>
 
-* **Do not trust default isolation blindly:** `Read Committed` allows lost updates and non-repeatable reads. Even `Snapshot Isolation` (`Repeatable Read` in PostgreSQL) still allows **Write Skew**: two transactions read the same snapshot, pass validation, insert two separate rows, and break a shared limit (like max active sessions). For cross-row rules, use `SERIALIZABLE` (SSI) or lock a shared parent row (`SELECT ... FOR UPDATE`) so requests check the limit one by one.
-* **Keep high-churn Outbox/Inbox tables clean:** Frequent `DELETE`s leave dead rows behind (MVCC bloat) and slow down indexes, while an idle open transaction pins PostgreSQL's cleanup horizon (`xmin`) and blocks vacuuming. Partition append-only event tables by time and drop old partitions (`DROP TABLE`), paired with `idle_in_transaction_session_timeout`.
-* **Match locking to contention:** Use **Optimistic Concurrency** (`rowversion` / `xmin` + jittered retry) when conflicts are rare. Use **atomic conditional updates** (`WHERE available >= @qty`) or **`FOR UPDATE SKIP LOCKED`** for busy job queues. Use **keyset pagination** `(ts, id)` instead of `OFFSET` so deep pages stay fast and do not skip rows.
+Default isolation levels hide subtle concurrency bugs. Read Committed allows lost updates and non-repeatable reads, while Snapshot Isolation (Repeatable Read in PostgreSQL) still permits **write skew**: two transactions read the same snapshot, pass validation, insert two separate rows, and break a shared limit like max active sessions. For cross-row invariants, I use Serializable (SSI) or lock a shared parent row with `FOR UPDATE` so concurrent requests check the rule sequentially.
+
+High-churn Outbox and Inbox tables also degrade fast if pruned with continuous deletes, which create MVCC dead-tuple bloat and index churn. An idle open transaction pins PostgreSQL's cleanup horizon and blocks autovacuum altogether, so I prefer time-partitioned event tables dropped atomically by partition alongside an idle-transaction timeout. For general concurrency and reads, I pick the primitive per workload: optimistic version checks where conflicts are rare, atomic conditional updates or `SKIP LOCKED` for hot queues, and keyset pagination instead of offset scans.
 
 ---
 
@@ -56,10 +56,9 @@ I design backend systems around **data invariants and failure boundaries**—ass
   </picture>
 </p>
 
-* **Avoid the Outbox polling gap:** If `TX1` gets `id=10` (slow) and `TX2` gets `id=11` and commits first, a simple poller (`WHERE id > last_id`) only sees `11`, moves its cursor to `11`, and permanently skips `10`. Fix this with **WAL-ordered CDC** (`Debezium` via `pgoutput`, which streams in real commit order) or status-indexed `SKIP LOCKED` claims.
-* **Make retries and deliveries safe:** Brokers guarantee *at-least-once* delivery, not *exactly-once* side effects. Dedup events in a consumer **Inbox table** (`UNIQUE(message_id)` inside the local DB transaction). For API `Idempotency-Key` records, store `(key, payload_hash, state, response)`: return the saved response on exact retry, `409 Conflict` if the first request is still running, and `422` if the same key is reused with a different payload.
-* **Keep Kafka consumers stable:** Partition by aggregate ID (`entity_id`) to keep per-entity order. Avoid slow blocking I/O inside the poll loop or limit batch sizes under `max.poll.interval.ms` with cooperative sticky assignment so rebalances do not trigger duplicate storms.
-* **Design Sagas around a pivot step:** Model long workflows as persisted state machines. Steps before the **pivot transaction** (point of no return) need clean undo/compensation actions; steps after it must retry forward safely with deadline timers for stuck jobs.
+Polling an Outbox table by an auto-incrementing ID or timestamp has a classic gap bug: if transaction A claims ID 10 slowly while transaction B claims ID 11 and commits first, a naive poller advances its cursor past 10 and loses that event permanently. Streaming directly from the write-ahead log via Debezium CDC emits events in actual commit order, or if polling is required, claims must use status-indexed `SKIP LOCKED` rows rather than a monotonic cursor.
+
+Because brokers guarantee at-least-once delivery rather than exactly-once side effects, consumers enforce deduplication in a local Inbox table inside the same database transaction as the state update. On write APIs, idempotency records store the request payload hash alongside the key: exact retries return the cached response, in-flight duplicates get a 409 Conflict, and reusing a key with a modified payload fails with 422. For Kafka consumers, keying partitions by entity ID preserves per-aggregate order while cooperative sticky assignment and bounded poll batches prevent rebalance storms. Long-lived Sagas follow explicit state machines split around a pivot transaction: steps before it define semantic compensations, and steps after it retry forward.
 
 ---
 
@@ -73,9 +72,9 @@ I design backend systems around **data invariants and failure boundaries**—ass
   </picture>
 </p>
 
-* **Stop retry storms before they keep the system down:** Blind retries across 3 service hops multiply load (`3 × 3 × 3 = 27×`) and keep a slowed service crashed even after user traffic drops. Pass the **remaining request deadline** downstream (`CancellationToken` / `context.Context`), cap retries with a **retry budget (≤ 10% of traffic)** plus full jitter, and fail fast (`503`) when queues fill up.
-* **Never trust cache locks without DB fencing:** A Redis lock can expire while a worker freezes during a GC pause; when the worker wakes up, it can overwrite newer data. Pair distributed leases with a **monotonic fencing token** checked directly by the database (`WHERE last_fence_token < @token`).
-* **Watch clock drift & `.NET / Go` runtime limits:** Never use wall-clock timestamps (`DateTime.UtcNow`) for timeouts or event order across servers—use monotonic clocks for elapsed time and DB/LSN order for causality. Guard against `TIME_WAIT` port exhaustion, `HTTP/2` stream limits on single gRPC channels, thread-pool starvation (sync-over-async), and large-object GC spikes.
+Blind retries across multiple service hops turn minor slowdowns into metastatic outages: three retries across three layers multiply load by 27x and keep downstream databases pinned even after user traffic drops. To prevent self-inflicted collapse, outbound calls propagate the remaining request deadline downstream, cap retries under a strict retry budget (around 10% of active traffic) with full jitter, and shed excess load early with 503s before queues saturate.
+
+Distributed locks in Redis are never sufficient on their own for correctness, because a worker paused by GC can wake up after its lease expires and overwrite newer writes. Any lease used for mutual exclusion needs a monotonic fencing token verified atomically at the database write boundary. I also avoid wall-clock timestamps for timeouts or distributed ordering due to NTP drift, and watch runtime bottlenecks closely in .NET and Go: socket exhaustion, HTTP/2 stream limits on shared gRPC channels, thread-pool starvation from sync-over-async calls, and large-object GC pauses.
 
 ---
 
@@ -89,9 +88,9 @@ I design backend systems around **data invariants and failure boundaries**—ass
   </picture>
 </p>
 
-* **Handle parallel tabs without breaking reuse protection:** Rotating refresh tokens stop replay attacks, but two browser tabs refreshing at the same instant look like token theft. Track tokens by **family lineage** `(family_id, jti, parent_jti)`: allow a short client mutex + server grace window (`predecessor_jti`) so parallel tabs share the new token smoothly, but revoke the entire token family immediately on real replay after the window.
-* **Risk-based step-up MFA & Claims:** Combine `Role Claims + User Claims` for fine-grained permissions, and score browser/environment changes to trigger **TOTP / SMS OTP** step-up checks instead of silently trusting drifted sessions or locking out real users.
-* **Enforce multi-tenancy inside the database:** Application `WHERE tenant_id = @id` filters can be missed in a single query. Add **PostgreSQL Row-Level Security (RLS)** via `SET LOCAL app.tenant_id` so the database itself blocks cross-tenant reads or writes, backed by per-tenant rate limits.
+Rotating refresh tokens catch stolen-token replays, but parallel browser tabs refreshing at the same moment look identical to token theft if handled naively. Tracking refresh tokens by family lineage lets the server revoke an entire session tree on real replay while resolving legitimate tab races via a client refresh mutex and a short grace window mapped to the previous token ID.
+
+For access control, combining Role Claims and User Claims gives both coarse role boundaries and user-specific overrides, while environment and fingerprint drift signals drive step-up TOTP or SMS OTP checks rather than locking out users on minor browser changes. In multi-tenant databases, relying solely on application-level tenant filters is fragile because one missed query leaks data; pairing them with PostgreSQL Row-Level Security bound to the transaction context keeps isolation enforced inside the engine itself.
 
 ---
 
@@ -105,8 +104,9 @@ I design backend systems around **data invariants and failure boundaries**—ass
   </picture>
 </p>
 
-* **Keep two-way sync loop-free:** Stop webhook echo loops by tagging outbound changes with origin metadata + payload hashes, and ignoring incoming webhooks that match our own recent hash. Treat webhooks as fast hints backed by scheduled **watermark sweeps** (`last_sync - clock_skew_window`) and clear per-field ownership to prevent silent overwrites.
-* **Build grounded RAG & safe tool calling:** Always filter by `tenant_id` and user ACLs **before** vector scoring (`Qdrant` + `BM25` + `RRF`), never after picking top-K. Validate every LLM response against strict JSON Schemas, and wrap `MCP` / tool calls with timeouts, step limits, circuit breakers, and per-tenant token budgets.
+Two-way integrations with platforms like Azure DevOps or ERPs break easily through webhook echo loops and dropped deliveries. Tagging outbound writes with origin metadata and normalized payload hashes lets the receiver drop echoed updates immediately, while periodic watermark reconciliation sweeps heal missed webhooks and explicit field ownership prevents silent overwrites.
+
+When integrating LLMs and RAG into production workflows, tenant and ACL filters must run before vector scoring rather than after picking top-K results. Combining Qdrant dense search with BM25 lexical matching improves exact-identifier recall, strict JSON schema validation keeps model outputs safe for downstream code, and MCP tool calls stay bounded behind timeouts, step caps, and per-tenant token budgets.
 
 ---
 
@@ -114,21 +114,21 @@ I design backend systems around **data invariants and failure boundaries**—ass
 
 | Failure Scenario | What Breaks Silently | How I Prevent It |
 | :--- | :--- | :--- |
-| Outbox poller hits an uncommitted ID gap (`id=11` commits before `10`) | Poller moves cursor to `11`; event `10` is lost forever | **WAL-ordered CDC (`Debezium`)** or status-indexed `SKIP LOCKED` |
-| Two transactions check the same limit and insert different rows | **Write Skew** breaks the shared limit under Snapshot Isolation | `SERIALIZABLE` (SSI) or parent-row `SELECT ... FOR UPDATE` |
-| Worker freezes during GC past Redis lock TTL | Stale worker wakes up and overwrites newer state | **Monotonic fencing token** checked inside the DB `UPDATE` |
-| Multi-hop retries fire during a downstream slowdown | `N^k` retry storm keeps the system crashed after load drops | **Deadline propagation**, ≤10% retry budget + jitter, fast-fail `503` |
-| Two browser tabs refresh a rotating JWT together | Server flags false token reuse and logs out a real user | Cross-tab refresh lock + `(family_id, predecessor_jti)` grace cache |
-| Continuous `DELETE` on busy Outbox / Inbox tables | Dead-tuple bloat & `xmin` pinning slow down queries | Time-partitioned tables (`DROP PARTITION`) + idle tx timeout |
+| Outbox poller hits an uncommitted ID gap | Cursor jumps past the slower transaction; event is lost | WAL-ordered CDC (Debezium) or status-indexed `SKIP LOCKED` |
+| Two transactions check a shared limit concurrently | Write skew under Snapshot Isolation violates the cap | Serializable (SSI) or parent-row `FOR UPDATE` sentinel |
+| Worker stalls in GC past Redis lock TTL | Stale worker wakes up and overwrites newer state | Monotonic fencing token checked inside the DB update |
+| Multi-hop retries fire during a brownout | Amplified retry storm keeps the system down | Deadline propagation, ~10% retry budget, jitter, load shedding |
+| Two browser tabs rotate the same refresh token | False reuse detection logs out a valid user | Cross-tab refresh mutex and short predecessor grace cache |
+| Continuous deletes on busy Outbox / Inbox tables | MVCC dead-tuple bloat and vacuum lag degrade P99 | Time-partitioned tables (drop partition) + idle tx timeout |
 
 ---
 
-### Decision Heuristics (Trade-offs)
+### Decision Heuristics
 
-* **Modular Monolith vs. Microservices:** Keep clean module and schema boundaries inside one deployable while domain rules change fast; split into separate services only when scaling, fault isolation, or team ownership truly require network boundaries.
-* **Debezium CDC vs. Polling Outbox:** Use `SKIP LOCKED` polling for simpler ops at low/medium write load; switch to WAL-based CDC when polling I/O, sub-second lag, or strict commit-order delivery matters.
-* **Synchronous gRPC/Protobuf vs. Async Kafka/RabbitMQ:** Use `gRPC` when the caller needs an immediate yes/no answer; send cross-service side effects, notifications, and third-party sync through durable queues.
-* **Optimistic vs. Pessimistic Locking:** Optimistic locking (`xmin`/`rowversion`) is faster when conflicts are rare; move to row locks or partitioned queues once retry collisions hurt tail latency.
+* **Modular Monolith vs. Microservices:** Keep strict module and schema boundaries inside one deployable while domain rules change fast; split services only when scaling, fault isolation, or team ownership justify network boundaries.
+* **Debezium CDC vs. Polling Outbox:** Use `SKIP LOCKED` polling for simpler operations at moderate write volume; adopt WAL-based CDC when polling load, sub-second lag, or strict commit order matters.
+* **Synchronous gRPC vs. Async Kafka/RabbitMQ:** Keep gRPC on paths that need an immediate invariant check; push cross-service side effects, notifications, and external sync onto durable queues.
+* **Optimistic vs. Pessimistic Locking:** Optimistic version checks win when conflicts are rare; move to row locks or partitioned queues once retry collisions hurt tail latency.
 
 ---
 
@@ -136,11 +136,11 @@ I design backend systems around **data invariants and failure boundaries**—ass
 
 | Layer | Technologies & Mechanisms |
 | :--- | :--- |
-| **Languages & Runtimes** | `C# / .NET` · `Go` · `Java` · `TypeScript` |
-| **Storage & Indexing** | `PostgreSQL` (MVCC, SSI, RLS, Partitioning) · `SQL Server` · `Redis` · `MongoDB` · `Qdrant` |
-| **Messaging & Transport** | `Apache Kafka` · `RabbitMQ` · `MassTransit` · `Debezium CDC` · `gRPC` · `Protocol Buffers` |
-| **Reliability & Security** | `CQRS` · `Saga` · `Outbox/Inbox` · `Idempotency` · `Fencing Tokens` · `DLQ` · `Circuit Breaker` · `MFA (TOTP/SMS)` |
-| **AI & Delivery** | `LLM Integration` · `Hybrid RAG` · `MCP` · `Tool Calling` · `Docker` · `GitLab CI/CD` · `GitHub Actions` |
+| **Backend & Runtimes** | C# · .NET · Go · Java · TypeScript |
+| **Storage & Vector** | PostgreSQL · SQL Server · Redis · MongoDB · Qdrant |
+| **Messaging & RPC** | Kafka · RabbitMQ · MassTransit · Debezium CDC · gRPC · Protobuf |
+| **Reliability & Security** | CQRS · Saga · Outbox/Inbox · Idempotency · Fencing Tokens · DLQ · Circuit Breaker · MFA |
+| **AI & Delivery** | LLM Integration · Hybrid RAG · MCP · Tool Calling · Docker · GitLab CI/CD · GitHub Actions |
 
 ---
 
